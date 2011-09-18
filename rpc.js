@@ -57,20 +57,25 @@ function messageStart(tx, json) {
 	log(3, ">>> "+json)
 
 	tx.json = json
+
 	tx.msg = msg
-	if(!msg) 
+	if(!msg)
+		return fail(tx, "no message")
+	if(typeof msg !== "object")
 		return fail(tx, "bad message")
 
-	if(!(msg instanceof Array))
+	var args = msg.args
+	if(!(args instanceof Array))
 		return fail(tx, "message not an array")
 
-	var f = cbs[msg[0]]
+	var cbs = tx.cbs
+	var f = cbs[args[0]]
 	if(!f)
-		return fail(tx, "remote procedure not found: "+f)
+		return fail(tx, "function not found: "+f)
 	
-	var args = msg.slice(1)
+	args = args.slice(1)
 	args.push(function(msgOut) { messageEnd(tx, msgOut) })
-	Function.apply(tx, args)
+	f.apply(tx, args)
 	//tx.cbs(msg, function(msgOut) { messageEnd(tx, msgOut) }, tx)
 }
 
@@ -89,8 +94,8 @@ function fail(tx, why) {
 }
 
 function messageInit(tx) {
-	var m = tx.req.method,
-		json = tx.query.j
+	var m = tx.req.method
+	var json = tx.query.j
 
 	if(!json) {
 
@@ -149,11 +154,12 @@ function wwwErr(req, res, r) {
 
 // Every request starts here
 function accept(req, res, cbs) {
-	var u = url.parse(req.url, true),
-		path = u.pathname
+	var u = url.parse(req.url, true)
+	var path = u.pathname
 
 	if(/^\/rpc\/?$/.test(path)) {
-		messageInit({cbs:(cbs || nop), req:req, res:res, path:path, query:u.query, u:u})
+		var tx = {cbs:(cbs || nop), req:req, res:res, path:path, query:u.query, u:u}
+		messageInit(tx)
 		return;
 	}
 

@@ -12,7 +12,9 @@
 <b>Enter message values here</b><br>
 Construct a message by entering the key/value pairs in this box, one per line.
 <textarea id=vals cols=80 rows=8>
-m hello!
+hello
+foo
+bar
 </textarea>
 <input id=sendbtn type=button value="Send"><p>
 
@@ -33,7 +35,7 @@ m hello!
 	function j2o(j) { return JSON.parse(j) }
 
 
-	function jsondReady() {
+	function rpcReady() {
 
 
 		var vals = el("vals")
@@ -43,7 +45,7 @@ m hello!
 
 		$("#sendbtn").click(function() {
 			var lines = vals.value.split("\n"),
-				msg = {},
+				msg = [],
 				line, i, m
 			
 			msgrcvd.value = ""
@@ -53,12 +55,13 @@ m hello!
 				line = lines[i]
 				m = line.match(/^([^\s]+) (.*)$/)
 				if(m) {
-					msg[m[1]] = m[2]
+					//msg[m[1]] = m[2]
+					msg.push(m[2])
 				}
 			}
 			msgsent.value = o2j(msg)
 
-			jsond.send(msg, function(rmsg) {
+			rpc.send('hello', "foo", "bar", function(rmsg) {
 				msgrcvd.value = o2j(rmsg)
 			})
 		})
@@ -68,10 +71,10 @@ m hello!
 
 	function docReady() {
 		var d = document, e = d.createElement('script')
-		e.id = "jsond"
+		e.id = "rpc"
 		e.async = false
 		e.src = rpcURL
-		e.onload = jsondReady
+		e.onload = rpcReady
 		d.body.appendChild(e)
 	}
 

@@ -23,27 +23,38 @@ IN THE SOFTWARE.
 
 (function() {
 
-	var j = {},
+	var o = {},
 		nop = function() {}
 	
-	j.j2o = function(j) { try { return JSON.parse(j) } catch(e) { return null } }
-	j.o2j = function(o) { return JSON.stringify(o) }
+	o.j2o = function(j) { try { return JSON.parse(j) } catch(e) { return null } }
+	o.o2j = function(o) { return JSON.stringify(o) }
 
-	j.seq = 1;
-	j.root = document.getElementById("jsond").src	// where this script was loaded from
-	j.cross = /^http/.test(j.root.toLowerCase())	// cross domain?	// xxx make smarter
+	o.seq = 1;
+	o.root = document.getElementById("rpc").src		// where this script was loaded from
+	o.cross = /^http/.test(o.root.toLowerCase())	// cross domain?	// xxx make smarter
 
-	j.root += /\/$/.test(j.root) ? "" : "/"			// ensure it ends with a slash
+	o.root += /\/$/.test(o.root) ? "" : "/"			// ensure it ends with a slash
 
-	j.send = function(objOut, cb) {
-		var cb = cb || nop,
-			loc = document.location,
-			url = j.root,
-			r = new XMLHttpRequest()
+	// send(a, [...,] cb)
+	o.send = function() {
+		var args = []
+		for(var i = 0; i < arguments.length; i++)
+			args[i] = arguments[i]
 
-		objOut.seq = j.seq++;
-		url = j.root+"?j="+encodeURIComponent(JSON.stringify(objOut))
+		var cb = args.pop()
+		if(typeof cb !== "function") 
+			cb = nop
 
+		var loc = document.location
+		var url = o.root
+		var r = new XMLHttpRequest()
+
+		var objOut = {args:args}
+
+		url = o.root+"?j="+encodeURIComponent(JSON.stringify(objOut))
+		alert(url)
+
+		// xxx support POST?
 		r.open("GET", url, true);
 		r.onreadystatechange = function() {
 			var json = r.responseText
@@ -63,7 +74,7 @@ IN THE SOFTWARE.
 		r.send()
 	}
 
-	jsond = j
+	rpc = o
 
 })()
 
