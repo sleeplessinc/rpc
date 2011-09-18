@@ -26,7 +26,7 @@ m hello!
 
 <script>
 
-	apiURL = "http://localhost:50505/api/"
+	rpcURL = "http://localhost:50505/rpc/"
 
 	function el(id) { return document.getElementById(id) }
 	function o2j(o) { return JSON.stringify(o) }
@@ -70,7 +70,7 @@ m hello!
 		var d = document, e = d.createElement('script')
 		e.id = "jsond"
 		e.async = false
-		e.src = apiURL
+		e.src = rpcURL
 		e.onload = jsondReady
 		d.body.appendChild(e)
 	}

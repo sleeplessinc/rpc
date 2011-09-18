@@ -2,9 +2,9 @@
 var rpc = require("./index.js"),
 	l = console.log
 
-function msgHandler(msg, cb) {
-	l("incoming msg: "+JSON.stringify(msg));
-	msg = {r:"You said: "+msg.m}
+function msgHandler(a, b, cb) {
+	l("incoming args: "+JSON.stringify(arguments));
+	msg = {r:"You sent a="+a+" and b="+b}
 	l("sending response: "+JSON.stringify(msg));
 	cb(msg)
 }

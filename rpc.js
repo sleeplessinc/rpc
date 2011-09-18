@@ -61,7 +61,17 @@ function messageStart(tx, json) {
 	if(!msg) 
 		return fail(tx, "bad message")
 
-	tx.cb(msg, function(msgOut) { messageEnd(tx, msgOut) }, tx)
+	if(!(msg instanceof Array))
+		return fail(tx, "message not an array")
+
+	var f = cbs[msg[0]]
+	if(!f)
+		return fail(tx, "remote procedure not found: "+f)
+	
+	var args = msg.slice(1)
+	args.push(function(msgOut) { messageEnd(tx, msgOut) })
+	Function.apply(tx, args)
+	//tx.cbs(msg, function(msgOut) { messageEnd(tx, msgOut) }, tx)
 }
 
 
@@ -87,8 +97,8 @@ function messageInit(tx) {
 		// json message absent
 
 		if(m == "GET") {
-			// special case: "GET /api/ HTTP/1.x" - return the api.js boot strap file
-			tx.req.url = "/api.js"
+			// special case: "GET /rpc/ HTTP/1.x" - return the rpc.js boot strap file
+			tx.req.url = "/rpc.js"
 			www(tx.req, tx.res)
 			return
 		}
@@ -138,18 +148,18 @@ function wwwErr(req, res, r) {
 
 
 // Every request starts here
-function accept(req, res, cb) {
+function accept(req, res, cbs) {
 	var u = url.parse(req.url, true),
 		path = u.pathname
 
-	if(/^\/api\/?$/.test(path)) {
-		messageInit({cb:(cb || nop), req:req, res:res, path:path, query:u.query, u:u})
+	if(/^\/rpc\/?$/.test(path)) {
+		messageInit({cbs:(cbs || nop), req:req, res:res, path:path, query:u.query, u:u})
 		return;
 	}
 
 	if(req.method == "OPTIONS") {
 		res.writeHead(200, {
-			"Access-Control-Allow-Origin": "*",	// to support cross-domain script execution of our api
+			"Access-Control-Allow-Origin": "*",	// to allow cross-domain script execution 
 			"Access-Control-Max-Age": "0",
 		})
 		res.end()
@@ -159,9 +169,9 @@ function accept(req, res, cb) {
 	www(req, res)					// everything else handled by paperboy
 }
 
-exports.createServer = function(cb) {
+exports.createServer = function(cbs) {
 	return http.createServer(function(req, res) {
-		accept(req, res, cb)
+		accept(req, res, cbs)
 	}) 
 }
 
