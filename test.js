@@ -2,7 +2,7 @@
 var rpc = require("./index.js")
 
 function hello(cb, a, b) {
-	cb({r:"You sent a="+a+" and b="+b})
+	cb("The hello function says, 'You sent a="+a+" and b="+b+"'")
 }
 
 var myapi = {

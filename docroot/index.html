@@ -1,74 +1,54 @@
 <html>
-	<head>
-		<style> body { padding: 3em; } </style>
-		<script src=jquery.js></script>
-	</head>
 <body>
-
-
 
 <h1>Test Page</h1>
 
-<b>Enter message values here</b><br>
-Construct a message by entering the key/value pairs in this box, one per line.
-<textarea id=vals cols=80 rows=8>
+<b>Enter message to send.</b><br>
+First line is name of remote function.<br>
+The rest are arguments, one per line.<br>
+<textarea id=vals cols=80 rows=4>
 hello
 foo
 bar
 </textarea>
 <input id=sendbtn type=button value="Send"><p>
 
-<b>This is the message actually sent to server</b><br>
-<textarea id=msgsent cols=80 rows=8></textarea> <p>
+<b>This is what gets sent to the server</b><br>
+<textarea id=msgsent cols=80 rows=2></textarea> <p>
 
-<b>This is the response message from the server</b><br>
-<textarea id=msgrcvd cols=80 rows=8></textarea><p>
+<b>This is the response from the server</b><br>
+<textarea id=msgrcvd cols=80 rows=2></textarea><p>
 
 
 
 <script>
 
+	var doc = document
 	rpcURL = "http://localhost:50505/rpc/"
 
-	function el(id) { return document.getElementById(id) }
-	function o2j(o) { return JSON.stringify(o) }
-	function j2o(j) { return JSON.parse(j) }
-
-
 	function rpcReady() {
-
-
-		var vals = el("vals")
-		var msgrcvd = el("msgrcvd")
-		var msgsent = el("msgsent")
+		var msgrcvd = doc.getElementById("msgrcvd")
+		var msgsent = doc.getElementById("msgsent")
 		var seq = 1;
-
-		$("#sendbtn").click(function() {
-			var msg = vals.value.split("\n"),
-				line, i, m
-			
+		doc.getElementById('sendbtn').onclick = function() {
+			var msg = document.getElementById('vals').value.split("\n")
+			var line, i, m
 			msgrcvd.value = ""
 			msgsent.value = ""
-
-			msgsent.value = o2j(msg)
-
-			msg.push(function(rmsg) { msgrcvd.value = o2j(rmsg) })
+			msgsent.value = JSON.stringify(msg)
+			msg.push(function(rmsg) { msgrcvd.value = JSON.stringify(rmsg) })
 			rpc.send.apply(rpc, msg)
-		})
-
+		}
 	}
 
-
-	function docReady() {
-		var d = document, e = d.createElement('script')
+	doc.body.onload = function() {
+		var e = doc.createElement('script')
 		e.id = "rpc"
 		e.async = false
 		e.src = rpcURL
 		e.onload = rpcReady
-		d.body.appendChild(e)
+		doc.body.appendChild(e)
 	}
-
-	$(document).ready(docReady)
 
 </script>
 
