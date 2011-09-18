@@ -69,10 +69,13 @@ function messageStart(tx, json) {
 	if(!(args instanceof Array))
 		return fail(tx, "message not an array")
 
+	var fname = args[0].trim()
+	if(!fname)
+		return fail(tx, "no function")
 	var cbs = tx.cbs
-	var f = cbs[args[0]]
+	var f = cbs[fname]
 	if(!f)
-		return fail(tx, "function not found: "+args[0])
+		return fail(tx, "function not found: "+fname)
 	
 	log(3, "args 1 "+util.inspect(args));
 	args.splice(0, 1, function(msgOut){messageEnd(tx, msgOut)})
@@ -82,20 +85,21 @@ function messageStart(tx, json) {
 
 
 function fail(tx, why) {
-	var rc = 500
+	//var rc = 200
 
 	why = why || "mystery"
 	log(3, "FAIL: "+why)
 
 	var msg = {error:why}
-
+	messageEnd(tx, msg)
+/*
 	s = "ERROR "+rc
 	s = o2j(msg)
 	tx.res.writeHead(rc, {
 		"Content-Type": "text/plain",
 		"Content-Length": s.length
 	})
-	tx.res.end(s)
+	tx.res.end(s)*/
 }
 
 function messageInit(tx) {
