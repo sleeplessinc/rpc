@@ -48,11 +48,9 @@ IN THE SOFTWARE.
 		var loc = document.location
 		var url = o.root
 		var r = new XMLHttpRequest()
-
 		var objOut = {args:args}
 
 		url = o.root+"?j="+encodeURIComponent(JSON.stringify(objOut))
-		alert(url)
 
 		// xxx support POST?
 		r.open("GET", url, true);

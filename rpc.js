@@ -21,6 +21,7 @@ IN THE SOFTWARE.
 
 */
 
+var util = require("util")
 var url = require("url")
 var http = require("http")
 var log = require("log5").mkLog("rpc:")
@@ -71,12 +72,12 @@ function messageStart(tx, json) {
 	var cbs = tx.cbs
 	var f = cbs[args[0]]
 	if(!f)
-		return fail(tx, "function not found: "+f)
+		return fail(tx, "function not found: "+args[0])
 	
-	args = args.slice(1)
-	args.push(function(msgOut) { messageEnd(tx, msgOut) })
+	log(3, "args 1 "+util.inspect(args));
+	args.splice(0, 1, function(msgOut){messageEnd(tx, msgOut)})
+	log(3, "args 2 "+util.inspect(args));
 	f.apply(tx, args)
-	//tx.cbs(msg, function(msgOut) { messageEnd(tx, msgOut) }, tx)
 }
 
 
@@ -85,7 +86,11 @@ function fail(tx, why) {
 
 	why = why || "mystery"
 	log(3, "FAIL: "+why)
+
+	var msg = {error:why}
+
 	s = "ERROR "+rc
+	s = o2j(msg)
 	tx.res.writeHead(rc, {
 		"Content-Type": "text/plain",
 		"Content-Length": s.length

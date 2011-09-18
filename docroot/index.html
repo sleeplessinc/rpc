@@ -44,26 +44,16 @@ bar
 		var seq = 1;
 
 		$("#sendbtn").click(function() {
-			var lines = vals.value.split("\n"),
-				msg = [],
+			var msg = vals.value.split("\n"),
 				line, i, m
 			
 			msgrcvd.value = ""
 			msgsent.value = ""
 
-			for(i = 0; i < lines.length; i++) {
-				line = lines[i]
-				m = line.match(/^([^\s]+) (.*)$/)
-				if(m) {
-					//msg[m[1]] = m[2]
-					msg.push(m[2])
-				}
-			}
 			msgsent.value = o2j(msg)
 
-			rpc.send('hello', "foo", "bar", function(rmsg) {
-				msgrcvd.value = o2j(rmsg)
-			})
+			msg.push(function(rmsg) { msgrcvd.value = o2j(rmsg) })
+			rpc.send.apply(rpc, msg)
 		})
 
 	}
