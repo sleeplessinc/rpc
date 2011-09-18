@@ -1,5 +1,5 @@
 
-var jsond = require("./index.js"),
+var rpc = require("./index.js"),
 	l = console.log
 
 function msgHandler(msg, cb) {
@@ -9,7 +9,7 @@ function msgHandler(msg, cb) {
 	cb(msg)
 }
 
-jsond.createServer(msgHandler).listen(50505)
+rpc.createServer(msgHandler).listen(50505)
 
 logLevel = 5
 l("listening");

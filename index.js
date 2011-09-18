@@ -1,4 +1,3 @@
-
 /*
 Copyright 2011 Sleepless Software Inc. All rights reserved.
 
@@ -22,11 +21,10 @@ IN THE SOFTWARE.
 
 */
 
-var url = require("url"),
-	http = require("http"),
-	log = require("log5").mkLog("jsond:")
-	
-	
+var url = require("url")
+var http = require("http")
+var log = require("log5").mkLog("rpc:")
+
 exports.log = log
 
 
