@@ -28,14 +28,12 @@ var log = require("log5").mkLog("rpc:")
 
 exports.log = log
 
-
 var j2o = function(j) { try { return JSON.parse(j) } catch(e) { return null } }
 var o2j = function(o) { return JSON.stringify(o) }
 var millis = function() { return new Date().getTime() }
 var time = function() { return Math.floor(millis() / 1000) }
 
 var nop = function(){}
-
 
 function messageEnd(tx, msgOut) {
 	var json = o2j(msgOut)
@@ -50,7 +48,6 @@ function messageEnd(tx, msgOut) {
 
 	tx.res.end(json)
 }
-
 
 function messageStart(tx, json) {
 	var msg = j2o(json)
@@ -77,29 +74,15 @@ function messageStart(tx, json) {
 	if(!f)
 		return fail(tx, "function not found: "+fname)
 	
-	log(3, "args 1 "+util.inspect(args));
 	args.splice(0, 1, function(msgOut){messageEnd(tx, msgOut)})
-	log(3, "args 2 "+util.inspect(args));
 	f.apply(tx, args)
 }
 
-
 function fail(tx, why) {
-	//var rc = 200
-
 	why = why || "mystery"
 	log(3, "FAIL: "+why)
-
 	var msg = {error:why}
 	messageEnd(tx, msg)
-/*
-	s = "ERROR "+rc
-	s = o2j(msg)
-	tx.res.writeHead(rc, {
-		"Content-Type": "text/plain",
-		"Content-Length": s.length
-	})
-	tx.res.end(s)*/
 }
 
 function messageInit(tx) {
@@ -107,9 +90,7 @@ function messageInit(tx) {
 	var json = tx.query.j
 
 	if(!json) {
-
 		// json message absent
-
 		if(m == "GET") {
 			// special case: "GET /rpc/ HTTP/1.x" - return the rpc.js boot strap file
 			tx.req.url = "/rpc.js"
@@ -136,7 +117,6 @@ function messageInit(tx) {
 	fail(tx, "bad method "+m)
 }
 
-
 // Static pages delivered using paperboy
 boy = require("paperboy")
 function www(req, res, docroot) {
@@ -159,7 +139,6 @@ function wwwErr(req, res, r) {
 	res.end("Error "+r)
 	log(3, r+" "+req.method+req.url)
 }
-
 
 // Every request starts here
 function accept(req, res, cbs) {
