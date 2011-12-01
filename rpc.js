@@ -119,7 +119,7 @@ function messageInit(tx) {
 
 // Static pages delivered using paperboy
 boy = require("paperboy")
-function www(req, res, docroot) {
+function www(req, res) {
 	boy
 		.deliver("docroot", req, res)
 		.before(function() {
