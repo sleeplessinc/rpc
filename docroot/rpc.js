@@ -23,8 +23,8 @@ IN THE SOFTWARE.
 
 (function() {
 
-	var o = {},
-		nop = function() {}
+	var o = {}
+	var nop = function() {}
 	
 	o.j2o = function(j) { try { return JSON.parse(j) } catch(e) { return null } }
 	o.o2j = function(o) { return JSON.stringify(o) }
@@ -72,7 +72,7 @@ IN THE SOFTWARE.
 		r.send()
 	}
 
-	rpc = o
+	RPC = o
 
 })()
 

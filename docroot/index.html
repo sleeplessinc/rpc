@@ -3,50 +3,44 @@
 
 <h1>Test Page</h1>
 
-<b>Enter message to send.</b><br>
-First line is name of remote function.<br>
-The rest are arguments, one per line.<br>
-<textarea id=vals cols=80 rows=4>
-hello
-foo
-bar
-</textarea>
+<b>Message to send</b><br>
+Function: <input id=func type=text value="echo"><br>
+Argument: <input id=arg type=text value="hello"><br>
 <input id=sendbtn type=button value="Send"><p>
 
-<b>This is what gets sent to the server</b><br>
-<textarea id=msgsent cols=80 rows=2></textarea> <p>
-
-<b>This is the response from the server</b><br>
-<textarea id=msgrcvd cols=80 rows=2></textarea><p>
-
+<b>Response </b><br>
+<textarea id=rcvd cols=80 rows=2></textarea><p>
 
 
 <script>
 
 	var doc = document
-	rpcURL = "http://localhost:50505/rpc/"
+	function elem(id) { return doc.getElementById(id) }
+	function val(id) { return elem(id).value }
 
-	function rpcReady() {
-		var msgrcvd = doc.getElementById("msgrcvd")
-		var msgsent = doc.getElementById("msgsent")
-		var seq = 1;
-		doc.getElementById('sendbtn').onclick = function() {
-			var msg = document.getElementById('vals').value.split("\n")
-			var line, i, m
-			msgrcvd.value = ""
-			msgsent.value = ""
-			msgsent.value = JSON.stringify(msg)
-			msg.push(function(rmsg) { msgrcvd.value = JSON.stringify(rmsg) })
-			rpc.send.apply(rpc, msg)
-		}
-	}
 
 	doc.body.onload = function() {
 		var e = doc.createElement('script')
 		e.id = "rpc"
 		e.async = false
-		e.src = rpcURL
-		e.onload = rpcReady
+		e.src = "http://localhost:50505/rpc/"
+		e.onload = function() {
+			var seq = 1;
+			doc.getElementById('sendbtn').onclick = function() {
+				try {
+					var rcvd = elem("rcvd")
+					rcvd.value = ""
+					RPC.send(val('func'), val('arg'), function(response) {
+						rcvd.value = JSON.stringify(response) 
+					})
+				}
+				catch(e) {
+					alert("Bad JSON");
+				}
+			}
+		}
+
+
 		doc.body.appendChild(e)
 	}
 

@@ -1,15 +1,15 @@
 
 var rpc = require("./index.js")
 
-function hello(cb, a, b) {
-	cb("The hello function says, 'You sent a="+a+" and b="+b+"'")
+function echo(cb, a) {
+	cb("echoing back "+a)
 }
 
-var myapi = {
-	hello:hello
+var api = {
+	echo:echo
 }
 
-rpc.createServer(myapi).listen(50505)
+rpc.createServer(api).listen(50505)
 
 rpc.log(5)
 
