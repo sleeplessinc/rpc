@@ -30,7 +30,7 @@ Argument: <input id=arg type=text value="hello"><br>
 				try {
 					var rcvd = elem("rcvd")
 					rcvd.value = ""
-					RPC.send(val('func'), val('arg'), function(response) {
+					RPC.send(val('func'), JSON.parse(val('arg')), function(response) {
 						rcvd.value = JSON.stringify(response) 
 					})
 				}

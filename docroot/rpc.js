@@ -42,10 +42,11 @@ IN THE SOFTWARE.
 			args[i] = arguments[i]
 
 		var cb = args.pop()
-		if(typeof cb !== "function") 
+		if(typeof cb !== "function") {
+			args.push(cb)
 			cb = nop
+		}
 
-		var loc = document.location
 		var url = o.root
 		var r = new XMLHttpRequest()
 		var objOut = {args:args}
