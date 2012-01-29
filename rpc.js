@@ -30,12 +30,12 @@ exports.log = log
 
 var j2o = function(j) { try { return JSON.parse(j) } catch(e) { return null } }
 var o2j = function(o) { return JSON.stringify(o) }
-var millis = function() { return new Date().getTime() }
-var time = function() { return Math.floor(millis() / 1000) }
 
 var nop = function(){}
 
+
 function messageEnd(tx, msgOut) {
+
 	var json = o2j(msgOut)
 
 	log(3, "<<< "+json)
@@ -43,22 +43,26 @@ function messageEnd(tx, msgOut) {
 	tx.res.writeHead(200, {
 		"Cache-Control": "no-cache",
 		"Content-Type": "text/plain",
-		"Content-Length": ""+json.length,
+		"Content-Length": "" + json.length,
 	})
 
 	tx.res.end(json)
+
 }
 
+
 function messageStart(tx, json) {
+
 	var msg = j2o(json)
 
 	log(3, ">>> "+json)
 
 	tx.json = json
-
 	tx.msg = msg
+
 	if(!msg)
 		return fail(tx, "no message")
+
 	if(typeof msg !== "object")
 		return fail(tx, "bad message")
 
@@ -66,42 +70,40 @@ function messageStart(tx, json) {
 	if(!(args instanceof Array))
 		return fail(tx, "message not an array")
 
-	var fname = args[0].trim()
-	if(!fname)
+	var funcName = args[0].trim()
+	if(!funcName)
 		return fail(tx, "no function")
+
 	var cbs = tx.cbs
-	var f = cbs[fname]
-	if(!f)
-		return fail(tx, "function not found: "+fname)
-	
+	var func = cbs[funcName]
+	if(!func)
+		return fail(tx, "function not found: "+funcName)
+
 	args.splice(0, 1, function(msgOut){messageEnd(tx, msgOut)})
-	f.apply(tx, args)
+	func.apply(tx, args)
+
 }
 
+
 function fail(tx, why) {
+
 	why = why || "mystery"
 	log(3, "FAIL: "+why)
 	var msg = {error:why}
 	messageEnd(tx, msg)
+
 }
 
+
 function messageInit(tx) {
+
 	var m = tx.req.method
 	var json = tx.query.j
 
 	if(!json) {
-		// json message absent
-		if(m == "GET") {
-			// special case: "GET /rpc/ HTTP/1.x" - return the rpc.js boot strap file
-			tx.req.url = "/rpc.js"
-			www(tx.req, tx.res)
-			return
-		}
 		fail(tx, "no message")
 		return
 	}
-
-	// json message present
 
 	if(m == "GET") {
 		messageStart(tx, json)
@@ -115,41 +117,12 @@ function messageInit(tx) {
 	}
 
 	fail(tx, "bad method "+m)
+
 }
 
-// Static pages delivered using paperboy
-boy = require("paperboy")
-function www(req, res) {
-	boy
-		.deliver("docroot", req, res)
-		.before(function() {
-		})
-		.after(function() {
-			log(3, "PB OK "+req.method+req.url)
-		})
-		.error(function() {
-			wwwErr(req, res, 500) 
-		})
-		.otherwise(function() {
-			wwwErr(req, res, 404) 
-		})
-}
-function wwwErr(req, res, r) {
-	res.writeHead(r, {'Content-Type': 'text/plain'})
-	res.end("Error "+r)
-	log(3, r+" "+req.method+req.url)
-}
 
 // Every request starts here
 function accept(req, res, cbs) {
-	var u = url.parse(req.url, true)
-	var path = u.pathname
-
-	if(/^\/rpc\/?$/.test(path)) {
-		var tx = {cbs:(cbs || nop), req:req, res:res, path:path, query:u.query, u:u}
-		messageInit(tx)
-		return;
-	}
 
 	if(req.method == "OPTIONS") {
 		res.writeHead(200, {
@@ -159,13 +132,20 @@ function accept(req, res, cbs) {
 		res.end()
 		return;
 	}
+	
+	var u = url.parse(req.url, true)
+	var path = u.pathname
+	var tx = {cbs:(cbs || nop), req:req, res:res, path:path, query:u.query, u:u}
+	messageInit(tx)
 
-	www(req, res)					// everything else handled by paperboy
 }
 
+
 exports.createServer = function(cbs) {
+
 	return http.createServer(function(req, res) {
 		accept(req, res, cbs)
 	}) 
+
 }
 
