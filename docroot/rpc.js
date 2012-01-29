@@ -30,8 +30,12 @@ IN THE SOFTWARE.
 	o.o2j = function(o) { return JSON.stringify(o) }
 
 	o.seq = 1;
-	o.root = document.getElementById("rpc").src		// where this script was loaded from
-	o.cross = /^http/.test(o.root.toLowerCase())	// cross domain?	// xxx make smarter
+	var e = document.getElementById("rpc")
+	if(e)
+		o.root = e.src								// where this script was loaded from
+	else
+		o.root = "."
+	//o.cross = /^http/.test(o.root.toLowerCase())	// cross domain?	// xxx make smarter
 
 	o.root += /\/$/.test(o.root) ? "" : "/"			// ensure it ends with a slash
 
