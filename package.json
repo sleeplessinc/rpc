@@ -1,6 +1,6 @@
 {
 	"name": "rpc",
-	"version": "1.0.7",
+	"version": "1.0.8",
 	"description" : "Simple remote procedure calling over HTTP",
 	"author": "Joe Hitchens <joe@sleepless.com> (sleepless.com)",
 	"license": {

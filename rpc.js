@@ -1,5 +1,5 @@
 /*
-Copyright 2011 Sleepless Software Inc. All rights reserved.
+Copyright 2013 Sleepless Software Inc. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -70,6 +70,9 @@ function messageStart(tx, json) {
 	if(!(args instanceof Array))
 		return fail(tx, "message not an array")
 
+	if(args.length < 1)
+		return fail(tx, "array empty")
+
 	var funcName = args[0].trim()
 	if(!funcName)
 		return fail(tx, "no function")
@@ -101,7 +104,12 @@ function messageInit(tx) {
 	var json = tx.query.j
 
 	if(!json) {
-		fail(tx, "no message")
+		tx.res.writeHead(404, {
+			"Cache-Control": "no-cache",
+			"Content-Type": "text/plain"
+		})
+		tx.res.end(tx.path + ": NOT FOUND")
+		log(3, "NOT FOUND: " + tx.path)
 		return
 	}
 
