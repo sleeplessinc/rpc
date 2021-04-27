@@ -13,7 +13,6 @@ module.exports = function( api_path, opts = {} ) {
 	const app = require("connect")();
 
 	app.use( require( "body-parser" ).json() );
-	app.use( require( "cookie-parser" )() );
 	app.use( require( "compression" )() );
 	if( opts.cors ) {
 		app.use( require( "cors" )() );	// enable to handle requests from other domains
