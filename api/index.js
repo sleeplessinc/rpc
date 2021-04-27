@@ -1,14 +1,14 @@
 
 module.exports = function( input, okay, fail ) {
 
-	const { cmd, msg } = input;
+	const { action, msg } = input;
 
-	if( cmd == "ping" ) {
+	if( action == "ping" ) {
 		okay( "pong" );
 		return;
 	}
 
-	fail( "Invalid action: " + cmd );
+	fail( "Invalid action: " + action );
 
 }
 
