@@ -4,7 +4,7 @@ const HERE = require("path").dirname( module.filename );
 
 require( "sleepless" ).globalize();
 
-module.exports = function( api_path, opts = {} ) {
+module.exports = function( url_path, api_path, opts = {} ) {
 
 	if( opts.dev ) {
 		delete require.cache[module.filename];	// cause module to reload on next require()
@@ -26,9 +26,9 @@ module.exports = function( api_path, opts = {} ) {
 	// API path handler
 	app.use( ( req, res, next ) => {
 		const { method, url, query, body } = req;
-		if( ( method == "GET" || method == "POST" ) && url.startsWith( api_path ) ) {
+		if( ( method == "GET" || method == "POST" ) && url.startsWith( url_path ) ) {
 			// Load api handler and pass input on to it
-			const path = HERE + api_path;
+			const path = api_path;
 			const mod = require( path );
 			const input = ( method == "GET" ) ? query : body;
 			mod( input, res.okay, res.fail );	
