@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sleeplessinc/rpc/issues"
   },
-  "homepage": "https://github.com/sleeplessinc/rpc#readme"
+  "homepage": "https://github.com/sleeplessinc/rpc#readme",
+  "dependencies": {
+    "sleepless": "^3.9.0"
+  }
 }
