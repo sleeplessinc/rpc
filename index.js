@@ -38,8 +38,5 @@ module.exports = function( api_path, opts = {} ) {
 		next();
 	});
 
-	// Serve static files
-	app.use( require( "serve-static" )( HERE + "/static" ) );
-
 	return app;
 }
