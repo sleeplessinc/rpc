@@ -1,16 +1,19 @@
 {
-	"name": "rpc",
-	"version": "1.0.8",
-	"description" : "Simple remote procedure calling over HTTP",
-	"author": "Joe Hitchens <joe@sleepless.com> (sleepless.com)",
-	"license": {
-		"type": "MIT",
-		"url": "https://github.com/sleeplessinc/rpc/raw/master/LICENSE"
-	},
-	"repositories": [
-		{
-			"type": "git",
-			"url": "https://sleeplessinc@github.com/sleeplessinc/rpc.git"
-		}
-	]
+  "name": "rpc",
+  "version": "2.0.0",
+  "description": "Connect/Express middleware that makes handling API calls easier",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sleeplessinc/rpc.git"
+  },
+  "author": "Joe Hitchens <joe@sleepless.com> (sleepless.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sleeplessinc/rpc/issues"
+  },
+  "homepage": "https://github.com/sleeplessinc/rpc#readme"
 }
