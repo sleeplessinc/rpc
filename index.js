@@ -26,15 +26,16 @@ module.exports = function( api_path, opts = {} ) {
 	// API path handler
 	app.use( ( req, res, next ) => {
 		const { method, url, query, body } = req;
-		log( method + " " + url );
-		if( /GET|POST/.test( method ) && url.startsWith( api_path ) ) {
+		if( ( method == "GET" || method == "POST" ) && url.startsWith( api_path ) ) {
+			// Load api handler and pass input on to it
 			const path = HERE + api_path;
 			const mod = require( path );
 			const input = ( method == "GET" ) ? query : body;
 			mod( input, res.okay, res.fail );	
-			return;
+		} else {
+			// Pass this request on to the next handler
+			next();
 		}
-		next();
 	});
 
 	return app;
