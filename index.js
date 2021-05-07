@@ -2,7 +2,7 @@
 
 const HERE = require("path").dirname( module.filename );
 
-require( "sleepless" ).globalize();
+require( "sleepless" );
 
 module.exports = function( url_path, api_path, opts = {} ) {
 

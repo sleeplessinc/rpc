@@ -1,6 +1,6 @@
 {
   "name": "rpc",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Connect/Express middleware that makes handling API calls easier",
   "main": "index.js",
   "scripts": {
