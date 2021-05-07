@@ -1,6 +1,6 @@
 {
   "name": "rpc",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Connect/Express middleware that makes handling API calls easier",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,6 @@
     "compression": "^1.7.4",
     "connect": "^3.7.0",
     "cors": "^2.8.5",
-    "sleepless": "^3.9.0"
+    "sleepless": "^4.2.1"
   }
 }
