@@ -10,7 +10,7 @@ module.exports = function( url_path, api_path, opts = {} ) {
 		delete require.cache[module.filename];	// cause module to reload on next require()
 	}
 
-	const app = require("connect")();
+	const app = require( "connect" )();
 
 	app.use( require( "body-parser" ).json() );
 	app.use( require( "compression" )() );
@@ -31,7 +31,7 @@ module.exports = function( url_path, api_path, opts = {} ) {
 			const path = api_path;
 			const mod = require( path );
 			const input = ( method == "GET" ) ? query : body;
-			mod( input, res.okay, res.fail );	
+			mod( input, res.okay, res.fail, req, res );	
 		} else {
 			// Pass this request on to the next handler
 			next();

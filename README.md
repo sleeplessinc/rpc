@@ -9,7 +9,7 @@
 
 	app = require( "connect" )()
 	url_path = "/api/"					// The url path prefix to watch for and handle
-	api_path = "/disk/path/to/modlue"	// location of handler module
+	api_path = "/disk/path/to/module"	// location of handler module
 	app.use( require( "rpc" )( url_path api_path ) )
 
 ## API handler
