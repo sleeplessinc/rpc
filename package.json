@@ -21,6 +21,6 @@
     "compression": "^1.7.4",
     "connect": "^3.7.0",
     "cors": "^2.8.5",
-    "sleepless": "^4.2.1"
+    "sleepless": "^5.0.0"
   }
 }
