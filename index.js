@@ -17,7 +17,6 @@ module.exports = function( url_path, api_path, opts = {} ) {
 	if( opts.cors ) {
 		app.use( require( "cors" )() );	// enable to handle requests from other domains
 	}
-	//app.use( mw_fin_json );		// adds okay, fail to res (defined in sleepless module)
 	app.use( ( req, res, next ) => {
 		req.query = require('querystring').parse( req._parsedUrl.query );
 		next();
@@ -49,4 +48,5 @@ module.exports = function( url_path, api_path, opts = {} ) {
 	});
 
 	return app;
+
 }
