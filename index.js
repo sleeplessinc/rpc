@@ -2,8 +2,6 @@
 
 const HERE = require("path").dirname( module.filename );
 
-//require( "sleepless" );
-
 module.exports = function( url_path, api_path, opts = {} ) {
 
 	if( opts.dev ) {
@@ -28,7 +26,9 @@ module.exports = function( url_path, api_path, opts = {} ) {
 		if( ( ( method == "GET" && opts.dev ) || method == "POST" ) && url.startsWith( url_path ) ) {
 			// Load api handler and pass input on to it
 			const path = api_path;
+
 			const mod = require( path );
+
 			const input = ( method == "GET" ) ? query : body;
 
 			const done = ( error, data ) => {
